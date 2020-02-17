@@ -3,58 +3,215 @@ Simple graph implementation
 """
 from util import Stack, Queue  # These may come in handy
 
+#undirected graphs are two way connections between each node, can go from A to B but also B to A
+#directed graphs have directions assigned to each edge, can go from A to B but not B to A
+#weighted graphs have numbers assigned to each edge
+#unweighted graphs do not have numbers assigned to each edge
 class Graph:
 
     """Represent a graph as a dictionary of vertices mapping labels to edges."""
+    #a way of storing the connections
+    #each key is the name of the vertex(node) and the value for each key is an array with the associated edges
     def __init__(self):
+        #stores the relationships between the vertices and the edges
         self.vertices = {}
 
+    #a vertex is a node or one of the circles
+    #before we can draw the connections we need to add the nodes
     def add_vertex(self, vertex_id):
         """
         Add a vertex to the graph.
-        """
-        pass  # TODO
+        """       
+        #sets have no duplicates, have to be unique
+        # unordered so order doesn't matter
+        # 0(1) or very fast
+        # sets are just hash tables underneath the hood without keys 
+        if vertex_id in self.vertices:
+            print("WARNING: That vertex already exists")
+        else:
+            self.vertices[vertex_id] = set()
 
+    #an edge is the connection between the nodes
+    #relationship between vertices
+    #to add an edge we need the two vertices
+    #it should find in the self.vertices dictionary, the key of v1 and push v2 into that dictionary
+    #and then find in the self.vertices dictionary, the key of v2 and push v1 into that dictionary
     def add_edge(self, v1, v2):
         """
         Add a directed edge to the graph.
         """
-        pass  # TODO
+        #if v1 and v2 are vertexes or nodes
+        #add a directed or one way edge
+        #.add is how we add something to a set
+        if v1 in self.vertices and v2 in self.vertices:
+            self.vertices[v1].add(v2)
+        else:
+            raise IndexError("That vertex does not exist")
 
     def get_neighbors(self, vertex_id):
         """
         Get all neighbors (edges) of a vertex.
-        """
-        pass  # TODO
+        """        
+        #find vertex_id in the dictionary and return all it's values
+        return self.vertices[vertex_id]
 
+    #visit neighbors at current depth first before moving downwards or visiting neighbors of neighbors
+    #accepts a starting vertex
+    #memorize the algorithm
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
 
+        """
+        BFT ALGORITHM
+        # Create an empty queue
+        # Add the starting vertex_id to the queue
+        # Create an empty set to store visited nodes
+        # While the queue is not empty...
+            # Dequeue, the first vertex
+            # Check if it's been visited
+            # If it has not been visited...
+                # Mark it as visited
+                # Then add all neighbors to the back of the queue
+        """
+        #create a queue and place the starting vertex in it
+        queue = Queue()
+        queue.enqueue(starting_vertex)
+
+        #create a set to store the visited nodes
+        visited = set()       
+       
+        #loop as long as there is anything in the queue
+        #while the queue is not empty
+        while queue.size() > 0:
+            #remove/shift the first vertex from the queue
+            currentVertex = queue.dequeue()
+
+            #if it is not inside the set that stores visited nodes
+            if currentVertex not in visited:
+                #print the vertex
+                print(currentVertex)
+
+                #and add it into the set that store nodes visited
+                visited.add(currentVertex)
+
+                #loop over each vertex/neighbor in the adjacency list for the vertex you are visiting
+                for neighbor in self.get_neighbors(currentVertex):          
+                    #and enqueue/add that vertex to the queue                
+                    queue.enqueue(currentVertex)        
+        
+    #explore as far as possible down one branch before backtracking
+    #there is no root node. pick one neighbor of a given node and continue to follow the neighbors of that node 
+    #before we visit its siblings. always choose the lowest number as our next item to visit
+    #depth first traversal
+    #should accept a starting node or vertex
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
 
-    def dft_recursive(self, starting_vertex):
+        """
+        DFT ALGORITHM
+        # Create an empty stack
+        # Push the starting vertex_id to the stack
+        # Create an empty set to store visited nodes
+        # While the stack is not empty...
+            # Pop, the first vertex
+            # Check if it's been visited
+            # If it has not been visited...
+                # Mark it as visited
+                # Then push all neighbors to the back of the stack
+        """
+
+        #create a stack to help keep track of vertices
+        stack = Stack()
+
+        #create a set to store visited vertices
+        visited = set()       
+
+        #while the stack has something in it
+        #use the stack's size method
+        while stack.size() > 0:
+            #pop the next vertex from the stack
+            currentVertex = stack.pop()
+
+            #if that vertex hasn't been visited yet
+            if currentVertex not in visited:
+                #print the current vertex
+                print(currentVertex)
+
+                #mark it as visited
+                visited.add(currentVertex)
+
+                #push all of its neighbors on to the stack
+                for neighbor in self.get_neighbors(currentVertex):
+                    stack.push(neighbor)        
+
+
+    #the function should accept a starting node
+    #traverse is to visit each node
+    def dft_recursive(self, starting_vertex, visited = None):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
         """
-        pass  # TODO
 
+        """
+        DFT RECURSIVE ALGORITHM
+        # check if the node is visited
+        # if not...
+            # mark it as visited
+            # print
+            # call dft_recursive on each child            
+        """
+
+        #create a set to store visited vertices if one has not been created yet
+        if visited is None:
+            visited = set()       
+
+        #add the starting vertex to visited
+        visited.add(starting_vertex)  
+
+        #and print the vertex
+        print(starting_vertex)     
+        
+        #loop over all the values in the adjency list for that vertex
+        for neighbor in self.vertices[starting_vertex]:
+            #if the value has not been visited, recursively call dft_recursive with that vertex
+            if neighbor not in visited:
+                self.dft_recursive(neighbor, visited)      
+       
+
+    #a search is to check each node and only return the thing you are looking for and return the path
+    #from the starting node to the ending node
+    #checks everything that one step away, then two steps away, then three steps away, etc.
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing the shortest path from
         starting_vertex to destination_vertex in
         breath-first order.
+        """
+
+        """
+        BFS ALGORITHM
+        # Create an empty queue
+        # Add A PATH TO the starting vertex_id to the queue
+        # Create an empty set to store visited nodes
+        # While the queue is not empty...
+            # Dequeue, the first PATH
+            # GRAB THE LAST VERTEX FROM THE PATH
+            # CHECK IF IT'S THE TARGET
+                # IF SO, RETURN THE PATH
+            # Check if it's been visited
+            # If it has not been visited...
+                # Mark it as visited
+                # Then add A PATH TO all neighbors to the back of the queue
+                    # (Make a copy of the path before adding)
         """
         pass  # TODO
 
@@ -95,7 +252,7 @@ if __name__ == '__main__':
     graph.add_edge(2, 4)
     graph.add_edge(3, 5)
     graph.add_edge(2, 3)
-    graph.add_edge(4, 6)
+    graph.add_edge(4, 6)     
 
     '''
     Should print:
@@ -134,12 +291,12 @@ if __name__ == '__main__':
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    print(graph.bfs(1, 6))
+    #print(graph.bfs(1, 6))
 
     '''
     Valid DFS paths:
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
-    print(graph.dfs(1, 6))
-    print(graph.dfs_recursive(1, 6))
+    #print(graph.dfs(1, 6))
+    #print(graph.dfs_recursive(1, 6))
