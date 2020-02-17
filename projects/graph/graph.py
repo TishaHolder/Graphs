@@ -58,6 +58,8 @@ class Graph:
     #visit neighbors at current depth first before moving downwards or visiting neighbors of neighbors
     #accepts a starting vertex
     #memorize the algorithm
+    #traversal is to visit each node
+    #search is to find a particular value or path
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
@@ -67,10 +69,10 @@ class Graph:
         """
         BFT ALGORITHM
         # Create an empty queue
-        # Add the starting vertex_id to the queue
+        # Add the starting vertex to the queue
         # Create an empty set to store visited nodes
         # While the queue is not empty...
-            # Dequeue, the first vertex
+            # Dequeue, the first vertex (remove from the front)
             # Check if it's been visited
             # If it has not been visited...
                 # Mark it as visited
@@ -97,16 +99,19 @@ class Graph:
                 #and add it into the set that store nodes visited
                 visited.add(currentVertex)
 
-                #loop over each vertex/neighbor in the adjacency list for the vertex you are visiting
+                 #Then add all neighbors to the back of the queue
                 for neighbor in self.get_neighbors(currentVertex):          
                     #and enqueue/add that vertex to the queue                
-                    queue.enqueue(currentVertex)        
+                    queue.enqueue(neighbor)    
+
+            print()#extra line for formatting purposes    
         
     #explore as far as possible down one branch before backtracking
     #there is no root node. pick one neighbor of a given node and continue to follow the neighbors of that node 
     #before we visit its siblings. always choose the lowest number as our next item to visit
     #depth first traversal
     #should accept a starting node or vertex
+    #changing our queue to a stack changes our bft to a dft because queue is FIFO and stack is LIFO
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
@@ -116,20 +121,23 @@ class Graph:
         """
         DFT ALGORITHM
         # Create an empty stack
-        # Push the starting vertex_id to the stack
+        # Push the starting vertex to the stack
         # Create an empty set to store visited nodes
         # While the stack is not empty...
-            # Pop, the first vertex
+            # Pop, the first vertex (remove from the back)
             # Check if it's been visited
             # If it has not been visited...
                 # Mark it as visited
                 # Then push all neighbors to the back of the stack
         """
 
-        #create a stack to help keep track of vertices
+        #create an empty stack
         stack = Stack()
 
-        #create a set to store visited vertices
+        # Push the starting vertex to the stack
+        stack.push(starting_vertex)
+
+        # Create an empty set to store visited vertices
         visited = set()       
 
         #while the stack has something in it
@@ -150,9 +158,10 @@ class Graph:
                 for neighbor in self.get_neighbors(currentVertex):
                     stack.push(neighbor)        
 
+        print()#extra line for formatting purposes
 
     #the function should accept a starting node
-    #traverse is to visit each node
+    #traverse is to visit each node     
     def dft_recursive(self, starting_vertex, visited = None):
         """
         Print each vertex in depth-first order
@@ -181,9 +190,10 @@ class Graph:
         print(starting_vertex)     
         
         #loop over all the values in the adjency list for that vertex
-        for neighbor in self.vertices[starting_vertex]:
-            #if the value has not been visited, recursively call dft_recursive with that vertex
+        for neighbor in self.get_neighbors(starting_vertex):
+            #if the value has not been visited, 
             if neighbor not in visited:
+                #recursively call dft_recursive on that vertex(neighbor)
                 self.dft_recursive(neighbor, visited)      
        
 
@@ -200,7 +210,7 @@ class Graph:
         """
         BFS ALGORITHM
         # Create an empty queue
-        # Add A PATH TO the starting vertex_id to the queue
+        # Add A PATH TO the starting vertex to the queue
         # Create an empty set to store visited nodes
         # While the queue is not empty...
             # Dequeue, the first PATH
@@ -231,11 +241,10 @@ class Graph:
             # GRAB THE LAST VERTEX FROM THE PATH
             last_vertex = path[-1]
 
-            # CHECK IF IT'S THE TARGET
-            if last_vertex not in visited:
-                if last_vertex == destination_vertex:
-                    # IF SO, RETURN THE PATH
-                    return path
+            # CHECK IF IT'S THE TARGET           
+            if last_vertex == destination_vertex:
+                # IF SO, RETURN THE PATH
+                return path
 
             # Check if it's been visited 
             if last_vertex not in visited:
