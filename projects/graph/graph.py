@@ -7,6 +7,9 @@ from util import Stack, Queue  # These may come in handy
 #***TO GO FROM A TRAVERSAL TO A SEARCH. ADD THE STARTING VERTEX TO A PATH(LIST) BEFORE ADDING IT TO THE 
 # QUEUE/STACK***
 
+#shortest path = bfs
+#maze = dfs
+
 #undirected graphs are two way connections between each node, can go from A to B but also B to A
 #directed graphs have directions assigned to each edge, can go from A to B but not B to A
 #weighted graphs have numbers assigned to each edge
@@ -183,6 +186,10 @@ class Graph:
             # call dft_recursive on each child            
         """
 
+        #***we have to keep track of visited nodes in a cyclic graphs or we will end up in infinite loop
+
+        #base case is when all the nodes have been visited, all nodes are in the visited set
+
         #create a set to store visited vertices if one has not been created yet
         if visited is None:
             visited = set()       
@@ -232,7 +239,7 @@ class Graph:
         queue = Queue()
 
         # Add THE STARTING VERTEX TO A PATH BEFORE ADDING IT to the queue
-        #use a list as our path
+        #use a list as our path, for our path the order does matter
         queue.enqueue([starting_vertex])
 
         #Create an empty set to store visited nodes
@@ -260,9 +267,9 @@ class Graph:
                 # Then add A PATH TO all neighbors to the back of the queue                                                     
                 for neighbor in self.get_neighbors(last_vertex):
                      #(Make a copy of the path before adding)  
-                    new_path = list(path) 
-                    new_path.append(neighbor)
-                    queue.enqueue(new_path)
+                    path_copy = path.copy()
+                    path_copy.append(neighbor)
+                    queue.enqueue(path_copy)
 
 
     def dfs(self, starting_vertex, destination_vertex):
@@ -323,15 +330,47 @@ class Graph:
                     stack.push(new_path)
 
 
-    def dfs_recursive(self, starting_vertex):
+    def dfs_recursive(self, starting_vertex, target_value, visited = None, path = None):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
         depth-first order.
 
         This should be done using recursion.
+        """       
+
         """
-        pass  # TODO
+        BFS RECURSIVE ALGORITHM
+        #check if starting vertex has been visited
+        #if not...
+            #if starting vertex is not destination:
+                #return path
+            #mark it as visited
+            #call dfs_recursive on each neighbor
+        """
+
+        #create a set to store visited vertices if one has not been created yet
+        if visited is None:
+            visited = set()
+
+        #create a list to store paths
+        if path is None:
+            path = []        
+
+        visited.add(starting_vertex)
+
+        path = path + [starting_vertex]
+
+        if starting_vertex == target_value:
+            return path
+
+        #loop over all the values in the adjency list for that vertex
+        for neighbor in self.vertices[starting_vertex]:
+            if neighbor not in visited:
+                new_path = self.dfs_recursive(neighbor, target_value, visited, path)
+                if new_path:
+                    return new_path
+         
 
 
 if __name__ == '__main__':
@@ -400,4 +439,4 @@ if __name__ == '__main__':
         [1, 2, 4, 7, 6]
     '''
     print(graph.dfs(1, 6))
-    #print(graph.dfs_recursive(1, 6))
+    print(graph.dfs_recursive(1, 6))
