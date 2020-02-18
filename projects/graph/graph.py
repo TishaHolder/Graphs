@@ -3,6 +3,10 @@ Simple graph implementation
 """
 from util import Stack, Queue  # These may come in handy
 
+#***dft/dfs uses stacks because they are LIFO and bft/bfs uses queues because they are FIFO***
+#***TO GO FROM A TRAVERSAL TO A SEARCH. ADD THE STARTING VERTEX TO A PATH(LIST) BEFORE ADDING IT TO THE 
+# QUEUE/STACK***
+
 #undirected graphs are two way connections between each node, can go from A to B but also B to A
 #directed graphs have directions assigned to each edge, can go from A to B but not B to A
 #weighted graphs have numbers assigned to each edge
@@ -197,9 +201,10 @@ class Graph:
                 self.dft_recursive(neighbor, visited)      
        
 
-    #a search is to check each node and only return the thing you are looking for and return the path
-    #from the starting node to the ending node
-    #checks everything that one step away, then two steps away, then three steps away, etc.
+    #a search is to check each node and only return the thing or path you are looking for
+    #a path extends from the starting node to the ending node
+    #checks everything that's one step away, then two steps away, then three steps away, etc.
+    #TO GO FROM A TRAVERSAL TO A SEARCH. ADD THE STARTING VERTEX TO A PATH(LIST) BEFORE ADDING IT TO THE QUEUE/STACK
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing the shortest path from
@@ -210,7 +215,7 @@ class Graph:
         """
         BFS ALGORITHM
         # Create an empty queue
-        # Add A PATH TO the starting vertex to the queue
+        # Add THE STARTING VERTEX TO A PATH (LIST) BEFORE ADDING IT to the queue
         # Create an empty set to store visited nodes
         # While the queue is not empty...
             # Dequeue, the first PATH
@@ -226,7 +231,7 @@ class Graph:
         #create an empty queue
         queue = Queue()
 
-        #Add A PATH TO the starting vertex_id to the queue
+        # Add THE STARTING VERTEX TO A PATH BEFORE ADDING IT to the queue
         #use a list as our path
         queue.enqueue([starting_vertex])
 
@@ -266,7 +271,57 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        """
+        BFS ALGORITHM
+        # Create an empty stack
+        # Add THE STARTING VERTEX TO A PATH (LIST) BEFORE ADDING IT to the stack
+        # Create an empty set to store visited nodes
+        # While the stack is not empty...
+            # Pop, the last PATH
+            # GRAB THE LAST VERTEX FROM THE PATH
+            # CHECK IF IT'S THE TARGET
+                # IF SO, RETURN THE PATH
+            # Check if it's been visited
+            # If it has not been visited...
+                # Mark it as visited
+                # Then add A PATH TO all neighbors to the back of the stack
+                    # (Make a copy of the path before adding)
+        """
+        #Create an empty stack
+        stack = Stack()
+
+        #Add THE STARTING VERTEX TO A PATH (LIST) BEFORE ADDING IT to the stack
+        stack.push([starting_vertex])
+
+        #Create an empty set to store visited nodes
+        visited = set()
+
+        # While the stack is not empty...
+        while stack.size() > 0:
+            # Pop, the last PATH
+            last_path = stack.pop()
+
+            # GRAB THE LAST VERTEX FROM THE PATH
+            last_vertex = last_path[-1]
+
+            # CHECK IF IT'S THE TARGET
+            if last_vertex == destination_vertex:                
+                # IF SO, RETURN THE PATH
+                return last_path
+
+            # Check if it's been visited
+            # If it has not been visited...
+            if last_vertex not in visited:
+                # Mark it as visited
+                visited.add(last_vertex)           
+                
+                # Then add A PATH TO all neighbors to the back of the stack                   
+                for neighbor in self.get_neighbors(last_vertex):
+                    #(Make a copy of the path before adding)  
+                    new_path = list(last_path) 
+                    new_path.append(neighbor)
+                    stack.push(new_path)
+
 
     def dfs_recursive(self, starting_vertex):
         """
@@ -344,5 +399,5 @@ if __name__ == '__main__':
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
-    #print(graph.dfs(1, 6))
+    print(graph.dfs(1, 6))
     #print(graph.dfs_recursive(1, 6))
