@@ -9,6 +9,12 @@ Suppose we have some input data describing a graph of relationships between pare
 
 For example, in this diagram and the sample input, 3 is a child of 1 and 2, and 5 is a child of 4:
 
+"""
+list looks like this:
+[(10, 1), (1, 3), (2, 3), (4, 5), (4, 8), (11, 8), (3, 6), (5, 6), (5, 7), (8, 9)]
+
+"""
+
 ```
  10
  /

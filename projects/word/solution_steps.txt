@@ -1,0 +1,12 @@
+1. Translate the problem into graph 
+
+    use BFS (shortest path)
+    words are nodes
+    edges/neighbors are words that differ by one and only one letter
+    directed or undirected? undirected
+    cyclic or acyclic? cyclic
+    dense or sparse?    
+
+2. Build your graph
+
+3. Traverse your graph
