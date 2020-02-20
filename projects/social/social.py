@@ -1,4 +1,5 @@
 import random
+from util import Stack, Queue  # These may come in handy
 
 class User:
     def __init__(self, name):
@@ -24,12 +25,15 @@ class SocialGraph:
             self.friendships[user_id].add(friend_id)
             self.friendships[friend_id].add(user_id)
 
+    #add vertexes
     def add_user(self, name):
         """
         Create a new user with a sequential integer ID
         """
         self.last_id += 1  # automatically increment the ID to assign the new user
+        #add a user as a vertex/node
         self.users[self.last_id] = User(name)
+        #create a friendship node associated with the user with an empty set(no friends assigned)
         self.friendships[self.last_id] = set()
 
     def populate_graph(self, num_users, avg_friendships):
@@ -74,7 +78,10 @@ class SocialGraph:
         # total_friendships = avg_friendships * num_users
         # N = avg_friendships * num_users // 2
 
-
+    #use a BFS
+    #associate the list of friends with 1 key
+    #friend's id is the key and the value is the path with all users in that user's extended network with
+    #the shortest friendship path between them
     def get_all_social_paths(self, user_id):
         """
         Takes a user's user_id as an argument
@@ -84,8 +91,45 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
-        visited = {}  # Note that this is a dictionary, not a set
+        #store visited nodes
+        visited = {}  # Note that this is a dictionary, not a set 
         # !!!! IMPLEMENT ME
+
+        #create an empty queue
+        queue = Queue()
+
+        # Add THE STARTING VERTEX TO A PATH BEFORE ADDING IT to the queue
+        #use a list as our path, for our path the order does matter
+        queue.enqueue([user_id])         
+
+        #index to be used to add items to the visited dictionary
+        index = 0   
+
+        #While the queue is not empty...
+        while queue.size() > 0:
+            #remove the first path from the queue
+            #list with user/friend ids
+            path = queue.dequeue()  
+
+            # GRAB THE LAST VERTEX FROM THE PATH
+            #this is going to be the friend id
+            last_friend_id = path[-1]         
+
+            # Check if it's been visited 
+            if last_friend_id  not in visited:
+            # If it has not been visited...
+                # add the path to the visited dictionary
+                visited[last_friend_id ] = path
+       
+
+                # Then add A PATH of all friends of last_friend_id to the back of the queue
+                for friend_id in self.friendships[last_friend_id]:
+                     #(Make a copy of the path before adding)  
+                    path_copy = path.copy()
+                    path_copy.append(friend_id)
+                    queue.enqueue(path_copy)       
+
+
         return visited
 
 
@@ -94,5 +138,5 @@ if __name__ == '__main__':
     sg.populate_graph(10, 2)
     print(sg.users)
     print(sg.friendships)
-    # connections = sg.get_all_social_paths(1)
-    # print(connections)
+    connections = sg.get_all_social_paths(1)
+    print(connections)
