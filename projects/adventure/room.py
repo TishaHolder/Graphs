@@ -15,6 +15,9 @@ class Room:
         return f"\n-------------------\n\n{self.name}\n\n   {self.description}\n\n{self.get_exits_string()}\n"
     def print_room_description(self, player):
         print(str(self))
+
+    #the exits for a room will contain either [n, s, e, or w] but not necessarily all of them
+    #only the exits that lead to somewhere 
     def get_exits(self):
         exits = []
         if self.n_to is not None:
@@ -26,8 +29,11 @@ class Room:
         if self.e_to is not None:
             exits.append("e")
         return exits
+
     def get_exits_string(self):
-        return f"Exits: [{', '.join(self.get_exits())}]"
+        #outputs => [n, s, e, w] if the exits apply to that room
+        return f"Exits: [{', '.join(self.get_exits())}]" 
+    
     def connect_rooms(self, direction, connecting_room):
         if direction == "n":
             self.n_to = connecting_room
@@ -44,6 +50,7 @@ class Room:
         else:
             print("INVALID ROOM CONNECTION")
             return None
+
     def get_room_in_direction(self, direction):
         if direction == "n":
             return self.n_to
@@ -55,5 +62,6 @@ class Room:
             return self.w_to
         else:
             return None
+
     def get_coords(self):
         return [self.x, self.y]

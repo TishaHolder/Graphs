@@ -100,11 +100,8 @@ class SocialGraph:
 
         # Add THE STARTING VERTEX TO A PATH BEFORE ADDING IT to the queue
         #use a list as our path, for our path the order does matter
-        queue.enqueue([user_id])         
-
-        #index to be used to add items to the visited dictionary
-        index = 0   
-
+        queue.enqueue([user_id])        
+       
         #While the queue is not empty...
         while queue.size() > 0:
             #remove the first path from the queue
@@ -116,19 +113,17 @@ class SocialGraph:
             last_friend_id = path[-1]         
 
             # Check if it's been visited 
-            if last_friend_id  not in visited:
+            if last_friend_id not in visited:
             # If it has not been visited...
                 # add the path to the visited dictionary
-                visited[last_friend_id ] = path
-       
+                visited[last_friend_id ] = path       
 
                 # Then add A PATH of all friends of last_friend_id to the back of the queue
                 for friend_id in self.friendships[last_friend_id]:
                      #(Make a copy of the path before adding)  
                     path_copy = path.copy()
                     path_copy.append(friend_id)
-                    queue.enqueue(path_copy)       
-
+                    queue.enqueue(path_copy)      
 
         return visited
 
@@ -137,6 +132,17 @@ if __name__ == '__main__':
     sg = SocialGraph()
     sg.populate_graph(10, 2)
     print(sg.users)
-    print(sg.friendships)
+
+    #modified to show the output shown in the README
+    sg.friendships = {1: {8, 10, 5}, 2: {10, 5, 7}, 3: {4}, 4: {9, 3}, 5: {8, 1, 2}, 6: {10}, 7: {2}, 8: {1, 5}, 9: {4}, 10: {1, 2, 6}}
+    #print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)
+
+    #answer for question 2 in the README
+    total = 0
+
+    for connection in connections:
+        total += len(connections[connection])
+
+        print(total/len(connections) - 1)
