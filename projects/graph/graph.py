@@ -21,6 +21,7 @@ class Graph:
     #each key is the name of the vertex(node) and the value for each key is an array with the associated edges
     def __init__(self):
         #stores the relationships between the vertices and the edges
+        #creates a hash table called vertices to store the nodes and their connected edges
         self.vertices = {}
 
     #a vertex is a node or one of the circles
@@ -36,6 +37,7 @@ class Graph:
         if vertex_id in self.vertices:
             print("WARNING: That vertex already exists")
         else:
+            #adding a directed edge
             self.vertices[vertex_id] = set()
 
     #an edge is the connection between the nodes
@@ -82,6 +84,7 @@ class Graph:
             # Dequeue, the first vertex (remove from the front)
             # Check if it's been visited
             # If it has not been visited...
+                # Print the vertex (optional)
                 # Mark it as visited
                 # Then add all neighbors to the back of the queue
         """
@@ -133,7 +136,8 @@ class Graph:
         # While the stack is not empty...
             # Pop, the first vertex (remove from the back)
             # Check if it's been visited
-            # If it has not been visited...
+            # If it has not been visited... 
+                # print the vertex (optional)
                 # Mark it as visited
                 # Then push all neighbors to the back of the stack
         """
@@ -211,7 +215,8 @@ class Graph:
     #a search is to check each node and only return the thing or path you are looking for
     #a path extends from the starting node to the ending node
     #checks everything that's one step away, then two steps away, then three steps away, etc.
-    #TO GO FROM A TRAVERSAL TO A SEARCH. ADD THE STARTING VERTEX TO A PATH(LIST) BEFORE ADDING IT TO THE QUEUE/STACK
+    #TO GO FROM A TRAVERSAL TO A SEARCH. ADD THE STARTING VERTEX TO A PATH(LIST) BEFORE ADDING IT TO THE 
+    # QUEUE/STACK
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing the shortest path from
@@ -279,7 +284,7 @@ class Graph:
         depth-first order.
         """
         """
-        BFS ALGORITHM
+        DFS ALGORITHM
         # Create an empty stack
         # Add THE STARTING VERTEX TO A PATH (LIST) BEFORE ADDING IT to the stack
         # Create an empty set to store visited nodes

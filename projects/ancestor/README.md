@@ -25,7 +25,7 @@ list looks like this:
     6   7   9
 ```
 
-Write a function that, given the dataset and the ID of an individual in the dataset, returns their earliest known ancestor – the one at the farthest distance from the input individual. If there is more than one ancestor tied for "earliest", return the one with the lowest numeric ID. If the input individual has no parents, the function should return -1.
+Write a function that, given the dataset and the ID of an individual (the id of the person farthest down the path) in the dataset, returns their earliest known ancestor – the one at the farthest distance from the input individual. If there is more than one ancestor tied for "earliest", return the one with the lowest numeric ID. If the input individual has no parents, the function should return -1.
 
 ```
 Example input
@@ -47,7 +47,7 @@ Example output
 
 Clarifications:
 * The input will not be empty.
-* There are no cycles in the input.
+* There are no cycles in the input. (directed or one way?)
 * There are no "repeated" ancestors – if two individuals are connected, it is by exactly one path.
 * IDs will always be positive integers.
 * A parent may have any number of children.
