@@ -61,11 +61,11 @@ while len(visited) != len(room_graph):
 
     #the exits for a room will contain either [n, s, e, or w] but not necessarily all of them
     #only the exits that lead to somewhere 
-    #get all the exits for the current room
-    exits = player.current_room.get_exits()  
-
+    #get all the exits for the current room    
+    exits = player.current_room.get_exits()   
+  
     #choose a random direction to move from the exits list               
-    direction_to_move = random.choice(exits)  
+    direction_to_move = random.choice(exits)           
    
     #if the current room is not in visited
     if player.current_room.id not in visited:
@@ -101,8 +101,9 @@ while len(visited) != len(room_graph):
             traversal_path.append(reverse_direction)
 
             #change current room to that room           
-            player.current_room = player.current_room.get_room_in_direction(reverse_direction)         
-
+            player.current_room = player.current_room.get_room_in_direction(reverse_direction) 
+        
+    
 
 # TRAVERSAL TEST
 visited_rooms = set()
@@ -125,8 +126,6 @@ else:
     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
     print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
 
-
-
 #######
 # UNCOMMENT TO WALK AROUND
 #######
@@ -139,3 +138,6 @@ while True:
         break
     else:
         print("I did not understand that command.")"""
+
+
+
